@@ -1,0 +1,25 @@
+@extends('layouts.app')
+
+@section('title', $pageTitle.' | Student Management System')
+
+@section('content')
+<div class="mx-auto max-w-3xl">
+    <div class="mb-6"><a href="{{ route('students.index') }}" class="text-sm font-semibold text-cyan-700 hover:underline">← Back to Students</a><h1 class="mt-3 text-3xl font-bold">{{ $pageTitle }}</h1><p class="mt-1 text-sm text-slate-500">Fields marked * are required.</p></div>
+    <form method="POST" action="{{ $formAction }}" class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        @csrf @if($formMethod !== 'POST') @method($formMethod) @endif
+        <div class="grid gap-5 md:grid-cols-2">
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Student Name *</span><input name="student_name" required maxlength="100" value="{{ old('student_name', $student->student_name) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-cyan-600 focus:outline-none">@error('student_name')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Gender *</span><select name="gender" required class="w-full rounded-lg border border-slate-300 px-3 py-2"><option value="">Select gender</option><option value="male" @selected(old('gender', $student->gender) === 'male')>Male</option><option value="female" @selected(old('gender', $student->gender) === 'female')>Female</option></select>@error('gender')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Age *</span><input type="number" name="age" required min="1" max="150" value="{{ old('age', $student->age) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('age')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Date of Birth</span><input type="date" name="dob" value="{{ old('dob', $student->dob?->format('Y-m-d')) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('dob')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Enrollment No.</span><input name="enrollment" maxlength="30" value="{{ old('enrollment', $student->enrollment) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('enrollment')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Enrollment Date</span><input type="date" name="enrollment_date" value="{{ old('enrollment_date', $student->enrollment_date?->format('Y-m-d')) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('enrollment_date')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Department</span><select name="dept_id" class="w-full rounded-lg border border-slate-300 px-3 py-2"><option value="">Unassigned</option>@foreach($departments as $department)<option value="{{ $department->dept_id }}" @selected((string)old('dept_id', $student->dept_id) === (string)$department->dept_id)>{{ $department->dept_name }}</option>@endforeach</select>@error('dept_id')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block"><span class="mb-1 block text-sm font-semibold">Payment *</span><input type="number" name="payment" required min="0" step="0.01" value="{{ old('payment', $student->payment ?? '0.00') }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('payment')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block md:col-span-2"><span class="mb-1 block text-sm font-semibold">Subject *</span><input name="subject" required maxlength="255" value="{{ old('subject', $student->subject) }}" class="w-full rounded-lg border border-slate-300 px-3 py-2">@error('subject')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+            <label class="block md:col-span-2"><span class="mb-1 block text-sm font-semibold">Description</span><textarea name="description" rows="4" class="w-full rounded-lg border border-slate-300 px-3 py-2">{{ old('description', $student->description) }}</textarea>@error('description')<span class="text-xs text-rose-600">{{ $message }}</span>@enderror</label>
+        </div>
+        <div class="flex flex-wrap justify-end gap-3 border-t border-slate-100 pt-5"><a href="{{ route('students.index') }}" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50">Cancel</a><button class="rounded-lg bg-cyan-700 px-5 py-2 text-sm font-semibold text-white hover:bg-cyan-800">Save Student</button></div>
+    </form>
+</div>
+@endsection
